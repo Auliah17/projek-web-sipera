@@ -80,34 +80,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             justify-content: center;
             align-items: center;
             height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
         }
+
         .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
+
         .logo {
             text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            color: #4CAF50;
+            color: #7b1e1e;
         }
+
+        h2 {
+            text-align: center;
+            color: #7b1e1e;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
         .btn-login {
-            background-color: #4CAF50;
+            background-color: #7b1e1e;
             border: none;
             width: 100%;
             padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: 0.3s;
         }
+
         .btn-login:hover {
-            background-color: #45a049;
+            background-color: #5e1616;
         }
+
         .register-link {
             text-align: center;
             margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .register-link a {
+            color: #7b1e1e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-danger {
+            border-radius: 8px;
         }
     </style>
 </head>
