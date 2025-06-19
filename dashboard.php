@@ -29,7 +29,7 @@ $result = $query->get_result();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     body { background: #f8f9fa; padding-bottom: 80px; font-family: 'Segoe UI', sans-serif; }
-    .navbar { background-color: #4CAF50; padding: 10px 20px; color: white; display: flex; justify-content: space-between; }
+    .navbar { background-color: #7b1e1e; padding: 10px 20px; color: white; display: flex; justify-content: space-between; }
     .navbar a { color: white; margin-left: 15px; text-decoration: none; font-weight: 500; }
     .animal-card { background: white; border-radius: 12px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: 100%; }
     .image-container {
@@ -53,7 +53,17 @@ $result = $query->get_result();
     .footer-menu { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px 0; }
     .footer-menu a { color: #555; text-align: center; text-decoration: none; font-size: 12px; }
     .footer-menu i { font-size: 20px; }
-    .footer-menu a:hover { color: #4CAF50; }
+    .footer-menu a:hover { color: #7b1e1e; }
+    <style>
+    .btn-sipera-merah {
+      background-color: #7b1e1e;
+      color: white;
+      border: none;
+    }
+    .btn-sipera-merah:hover {
+      background-color: #7b1e1e;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -72,7 +82,7 @@ $result = $query->get_result();
 
     <form method="GET" class="search-bar">
       <input type="text" name="keyword" value="<?= htmlspecialchars($keyword) ?>" class="form-control w-50" placeholder="Cari jenis ternak...">
-      <button class="btn btn-success"><i class="bi bi-search"></i></button>
+      <button class="btn btn-danger"><i class="bi bi-search"></i></button>
     </form>
 
     <div class="row mt-4">
@@ -98,7 +108,7 @@ $result = $query->get_result();
             <p class="card-text mb-1"><small class="text-muted">Usia: <?= $row['usia'] ?> tahun</small></p>
             <div><small>Stok: <?= htmlspecialchars($row['stok_sisa']) ?> / <?= htmlspecialchars($row['stok_awal']) ?></small></div>
             <div class="mt-2">
-              <a href="form_pemesanan_ternak.php?id=<?= $row['id'] ?>" class="btn btn-success btn-small"><i class="bi bi-cart-fill"></i> Pesan</a>
+              <a href="form_pemesanan_ternak.php?id=<?= $row['id'] ?>" class="btn btn-danger btn-small"><i class="bi bi-cart-fill"></i> Pesan</a>
               <a href="auto_chat.php?id_ternak=<?= $row['id'] ?>" class="btn btn-outline-primary btn-small"><i class="bi bi-chat-dots"></i> Chat</a>
             </div>
           </div>
