@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -63,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
             padding: 40px;
         }
         .container {
-            max-width: 800px;
+            max-width: 2000px;
             margin: auto;
         }
         .card {
@@ -71,20 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .card-header {
-            background-color: #4CAF50;
+            background-color: #7B1E1E;
             color: white;
             font-weight: bold;
         }
         .btn-submit {
-            background-color: #4CAF50;
+            background-color: #7B1E1E;
             border: none;
         }
         .btn-submit:hover {
-            background-color: #45a049;
+            background-color: #7B1E1E;
         }
         .message.success {
             background: #d4edda;
-            color: #155724;
+            color: #7B1E1E;
         }
         .message.error {
             background: #f8d7da;
@@ -100,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
             background: white;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #7B1E1E;
             color: white;
         }
         .table td, .table th {
@@ -110,6 +109,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
             text-align: center;
             padding: 20px;
             color: #777;
+        }
+        /* Tombol kembali ke beranda */
+        .btn-outline-danger {
+            color: #7B1E1E;
+            border: 2px solid #7B1E1E;
+            font-weight: bold;
+        }
+        .btn-outline-danger:hover {
+            background-color: #7B1E1E;
+            color: white;
         }
     </style>
 </head>
@@ -136,9 +145,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subjek'], $_POST['pes
     <div class="card">
         <div class="card-header">Daftar Aduan Saya</div>
         <div class="card-body" id="aduanListContainer">
-            <!-- Data akan muncul lewat JavaScript -->
+            <!-- Data akan dimuat oleh JavaScript -->
         </div>
     </div>
+</div>
+
+<!-- Tombol kembali -->
+<div class="container mt-4 text-start">
+    <a href="dashboard.php" class="btn btn-outline-danger">
+        ← Kembali ke Beranda
+    </a>
 </div>
 
 <script>
