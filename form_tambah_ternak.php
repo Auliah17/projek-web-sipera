@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $harga = $_POST["harga"];
     $status_kesehatan = $_POST["status_kesehatan"];
     $stok_awal = $_POST["stok_awal"];
-    $stok_sisa = $_POST["stok_sisa"];
+    $stok_sisa = $stok_awal;
     $deskripsi = $_POST["deskripsi"];
 
     $target_dir = "../../../jpg/";
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: #f0f4f7;
         }
         .navbar {
-            background-color: #388E3C;
+            background-color: #7b1e1e;
         }
         .navbar-brand, .nav-link {
             color: white !important;
@@ -84,18 +84,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 15px;
         }
         .card-header {
-            background-color: #388E3C;
+            background-color: #7b1e1e;
             color: white;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
             text-align: center;
         }
-        .btn-success {
-            background-color: #388E3C;
+        .btn-maroon {
+            background-color: #7b1e1e;
+            color: white;
             border: none;
         }
-        .btn-success:hover {
-            background-color: #2e7d32;
+        .btn-maroon:hover {
+            background-color: #5c1616;
+            color: white;
         }
     </style>
 </head>
@@ -151,10 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="form-label">Stok Awal</label>
                     <input type="number" name="stok_awal" class="form-control" required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Stok Sisa</label>
-                    <input type="number" name="stok_sisa" class="form-control" required>
-                </div>
+                <!-- stok_sisa diatur otomatis, jadi tidak ditampilkan -->
                 <div class="mb-3">
                     <label class="form-label">Foto Ternak</label>
                     <input type="file" name="foto" class="form-control" accept=".jpg,.jpeg,.png" required>
@@ -163,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label class="form-label">Deskripsi Tambahan</label>
                     <textarea name="deskripsi" class="form-control" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-success w-100">
+                <button type="submit" class="btn btn-maroon w-100">
                     <i class="bi bi-check-circle"></i> Simpan Data
                 </button>
             </form>
