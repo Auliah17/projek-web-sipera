@@ -1,76 +1,72 @@
-<?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login.php");
-    exit();
-}
-require_once __DIR__ . '/../../../config/database.php';
-
-$user_id = $_SESSION['user_id'];
-$id_ternak = $_GET['id_ternak'] ?? null;
-$pesan_error = $pesan_sukses = '';
-
-// Ambil data ternak + penjual
-$stmt = $conn->prepare("SELECT t.*, u.id AS id_penjual, u.nama AS nama_penjual
-                        FROM ternak t JOIN users u ON t.id_penjual = u.id
-                        WHERE t.id = ?");
-$stmt->bind_param("i", $id_ternak);
-$stmt->execute();
-$ternak = $stmt->get_result()->fetch_assoc();
-
-$id_penjual = $ternak['id_penjual'] ?? null;
-
-// Proses kirim pesan via AJAX
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode']) && $_POST['mode'] == 'kirim') {
-    $pesan = trim($_POST['pesan']);
-    if ($pesan !== '') {
-        $stmt = $conn->prepare("INSERT INTO chat (pengirim_id, penerima_id, id_ternak, pesan) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("iiis", $user_id, $id_penjual, $id_ternak, $pesan);
-        $stmt->execute();
-    }
-    exit();
-}
-
-// Proses ambil chat via AJAX
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode']) && $_POST['mode'] == 'ambil') {
-    $stmt = $conn->prepare("SELECT c.*, u.nama FROM chat c
-                            JOIN users u ON c.pengirim_id = u.id
-                            WHERE id_ternak = ? AND
-                                ((pengirim_id = ? AND penerima_id = ?) OR
-                                 (pengirim_id = ? AND penerima_id = ?))
-                            ORDER BY created_at ASC");
-    $stmt->bind_param("iiiii", $id_ternak, $user_id, $id_penjual, $id_penjual, $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $chats = [];
-    while ($row = $result->fetch_assoc()) {
-        $chats[] = $row;
-    }
-    header('Content-Type: application/json');
-    echo json_encode($chats);
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Chat dengan Penjual</title>
+    <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
-        .chat-container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,.1); }
-        .chat-box { height: 400px; overflow-y: scroll; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background: #e9ecef; }
-        .chat-message { margin-bottom: 10px; }
+        body {
+            background: #f1f8e9;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .chat-box {
+            height: 450px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 12px;
+            box-shadow: inset 0 0 8px #c8e6c9;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+        }
         .chat-bubble {
-            display: inline-block;
             padding: 10px 15px;
             border-radius: 20px;
-            max-width: 75%;
+            max-width: 70%;
             word-wrap: break-word;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .from-me { background-color: #4CAF50; color: white; margin-left: auto; text-align: right; }
-        .from-them { background-color: #f1f1f1; color: black; margin-right: auto; }
+        .from-me {
+            background-color: #a5d6a7;
+            color: #000;
+            margin-left: auto;
+            text-align: right;
+        }
+        .from-them {
+            background-color: #f1f1f1;
+            color: #000;
+            margin-right: auto;
+            text-align: left;
+        }
+        .chat-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        #form-chat input {
+            border-radius: 30px;
+        }
+        #form-chat button {
+            border-radius: 30px;
+        }
+        .btn-back {
+            background-color: #f5f5f5;
+            border: 1px solid #a5d6a7;
+            color: #388e3c;
+        }
+        .btn-back:hover {
+            background-color: #c8e6c9;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
@@ -82,13 +78,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode']) && $_POST['mo
                 let html = '';
                 res.forEach(msg => {
                     let bubble = msg.pengirim_id == <?= $user_id ?> ? 'from-me' : 'from-them';
-                    let align = msg.pengirim_id == <?= $user_id ?> ? 'justify-content-end' : 'justify-content-start';
-                    html += `<div class="chat-message d-flex ${align}">
+                    html += `<div class="chat-message ${bubble === 'from-me' ? 'justify-content-end' : 'justify-content-start'}">
                                 <div class="chat-bubble ${bubble}">
-                                    <strong>${msg.nama}</strong><br>${msg.pesan}<br>
-                                    <small>${msg.created_at}</small>
+                                    <div><strong>${msg.nama}</strong></div>
+                                    <div>${msg.pesan}</div>
+                                    <div class="chat-meta">${msg.created_at}</div>
                                 </div>
-                             </div>`;
+                            </div>`;
                 });
                 $('.chat-box').html(html);
                 $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
@@ -112,16 +108,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mode']) && $_POST['mo
     </script>
 </head>
 <body>
+
 <div class="chat-container">
-    <h5>💬 Chat dengan <b><?= htmlspecialchars($ternak['nama_penjual']) ?></b> (Ternak: <?= htmlspecialchars($ternak['jenis']) ?>)</h5>
-    <div class="chat-box my-3"></div>
-    <form id="form-chat" class="d-flex">
-        <input type="text" name="pesan" class="form-control me-2" placeholder="Ketik pesan..." autocomplete="off" required>
-        <button type="submit" class="btn btn-success">Kirim</button>
+    <h5>💬 Chat dengan <b><?= htmlspecialchars($ternak['nama_penjual']) ?></b></h5>
+    <p class="text-muted">Ternak: <strong><?= htmlspecialchars($ternak['jenis']) ?></strong></p>
+    
+    <div class="chat-box mb-3"></div>
+
+    <form id="form-chat" class="d-flex gap-2">
+        <input type="text" name="pesan" class="form-control" placeholder="Ketik pesan..." autocomplete="off" required>
+        <button type="submit" class="btn btn-success px-4">Kirim</button>
     </form>
-    <div class="mt-3">
-        <a href="inbox_chat.php" class="btn btn-secondary btn-sm">← Kembali ke inbox</a>
+
+    <div class="mt-4">
+        <a href="dashboard.php" class="btn btn-back">← Kembali ke Dashboard</a>
     </div>
 </div>
+
 </body>
 </html>
