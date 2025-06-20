@@ -22,52 +22,105 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #f1f8e9;
+            margin: 0;
+            padding: 0;
         }
+
         .navbar-sipera {
-            background-color: #43a047;
+            background-color: #7b1e1e;
         }
+
         .navbar-brand {
             font-weight: bold;
             color: white;
+            font-size: 20px;
         }
+
         .navbar-brand:hover {
             color: #f1f1f1;
         }
+
+        .nav-link.text-white {
+            color: white !important;
+        }
+
+        .nav-link.text-white:hover {
+            text-decoration: underline;
+        }
+
         .btn-logout {
-            background-color: #388e3c;
+            background-color: #7b1e1e;
             color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
         }
+
         .btn-logout:hover {
-            background-color: #2e7d32;
+            background-color: #5e1616;
         }
+
         .container-wrapper {
             max-width: 1100px;
             margin: 40px auto;
             background: white;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
+
         h2 {
-            color: #2e7d32;
+            color: rgb(0, 0, 0);
             margin-bottom: 30px;
             text-align: center;
         }
-        table thead {
-            background-color: #c8e6c9;
+
+        .table thead.thead-merah {
+            background-color: #7b1e1e !important;
         }
-        table th, table td {
+
+        .table thead.thead-merah th {
+            color: white !important;
+            background-color: #7b1e1e !important;
+        }
+
+        .table td {
             vertical-align: middle;
             text-align: center;
+            padding: 12px 10px;
         }
+
         a.detail-link {
-            color: #1b5e20;
+            color: #7b1e1e;
             text-decoration: none;
             font-weight: 600;
+            transition: color 0.2s;
         }
+
         a.detail-link:hover {
             text-decoration: underline;
+            color: #5e1616;
         }
+
+        .btn-outline-success {
+            border-color: #7b1e1e;
+            color: #7b1e1e;
+            font-weight: 500;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #7b1e1e;
+            color: white;
+        }
+        .table thead.thead-merah {
+            background-color: #7b1e1e !important;
+        }
+        .table thead.thead-merah th {
+            color: white !important;
+            background-color: #7b1e1e !important;
+        }
+
+
     </style>
 </head>
 <body>
@@ -77,11 +130,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="#">SIPERA - Admin</a>
         <div class="ms-auto">
-            <a href="/sipera/logout.php" class="nav-link text-white">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/sipera/logout.php" class="nav-link text-white">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
 </nav>
 
 <!-- ✅ Konten Daftar Aduan -->
@@ -90,7 +146,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
-            <thead class="table-success text-center">
+            <thead class="thead-merah text-center">
                 <tr>
                     <th>Nama Pengguna</th>
                     <th>Peran</th>
