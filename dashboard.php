@@ -32,7 +32,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
 
         .sidebar {
             width: 250px;
-            background: linear-gradient(180deg, #43a047, #2e7d32);
+            background: linear-gradient(180deg, rgb(136, 34, 34), #7b1e1e);
             color: white;
             padding: 20px;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -65,13 +65,13 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
         }
 
         .logout-button {
-            background-color: #c62828;
+            background-color: #7b1e1e;
             padding: 10px 15px;
             border-radius: 8px;
         }
 
         .logout-button:hover {
-            background-color: #b71c1c;
+            background-color: #5e1616;
         }
 
         .content {
@@ -81,7 +81,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
 
         .content h3 {
             font-weight: bold;
-            color: #2e7d32;
+            color: #7b1e1e;
         }
 
         .content p {
@@ -92,17 +92,19 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role
         .alert {
             background-color: #e8f5e9;
             border: 1px solid #c8e6c9;
-            color: #2e7d32;
+            color: #7b1e1e;
         }
 
         @media (max-width: 768px) {
             .main-container {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
                 position: relative;
             }
+
         }
     </style>
 </head>
