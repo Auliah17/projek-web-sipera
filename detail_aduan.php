@@ -10,9 +10,9 @@ $id_user = $_SESSION['user_id'];
 $role    = $_SESSION['role'];
 $id_aduan = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-/* ---------- 1. HANDLER AJAX LOAD PESAN ---------- */
+/* ---------- 1. HANDLER AJAX LOAD PESAN ---------- */
 if (isset($_GET['aksi']) && $_GET['aksi'] === 'load' && is_numeric($id_aduan)) {
-    // ambil pesan awal + balasan
+    // ambil pesan awal + balasan
     $stmt = $conn->prepare(
         "SELECT 'aduan' AS tipe, id_pengirim AS pengirim_id, role_pengirim AS pengirim, pesan, tanggal
          FROM aduan WHERE id = ?
@@ -25,7 +25,7 @@ if (isset($_GET['aksi']) && $_GET['aksi'] === 'load' && is_numeric($id_aduan)) {
     $stmt->execute();
     $res = $stmt->get_result();
 
-    ob_start();          // buat HTML bubble
+    ob_start();          // buat HTML bubble
     while ($row = $res->fetch_assoc()):
         $cls = htmlspecialchars($row['pengirim']);      // admin | pembeli | penjual
     ?>
@@ -36,11 +36,11 @@ if (isset($_GET['aksi']) && $_GET['aksi'] === 'load' && is_numeric($id_aduan)) {
         </div>
     <?php endwhile;
     echo ob_get_clean();
-    exit();               // kembali ke JS
+    exit();               // kembali ke JS
 }
-/* ---------- END AJAX ---------- */
+/* ---------- END AJAX ---------- */
 
-/* ---------- LOGIKA NORMAL HALAMAN ---------- */
+/* ---------- LOGIKA NORMAL HALAMAN ---------- */
 $stmt = $conn->prepare("SELECT * FROM aduan WHERE id = ?");
 $stmt->bind_param("i", $id_aduan); $stmt->execute();
 $aduan = $stmt->get_result()->fetch_assoc();
@@ -48,7 +48,7 @@ if (!$aduan || ($aduan['id_pengirim'] != $id_user && $role != 'admin')) {
     echo "<div class='alert alert-danger'>Aduan tidak ditemukan atau Anda tidak memiliki akses.</div>"; exit();
 }
 
-/* kirim balasan (normal POST reload boleh, atau nanti bisa di‑AJAX juga) */
+/* kirim balasan (normal POST reload boleh, atau nanti bisa di‑AJAX juga) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
     $pesan = trim($_POST['pesan']);
     if ($pesan !== '') {
@@ -74,17 +74,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
 <title>Detail Aduan</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-body{background:#f8f9fa;font-family:'Segoe UI',sans-serif;padding:40px}
-.container{max-width:800px;margin:auto}
-.card{border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.chat-box{max-height:400px;overflow-y:auto}
-.chat-item{padding:10px 15px;border-radius:10px;margin-bottom:10px;max-width:75%}
-.chat-item.admin{background:#e7f1ff;align-self:flex-start}
-.chat-item.pembeli,.chat-item.penjual{background:#d4edda;align-self:flex-end;margin-left:auto}
-.sender{font-weight:600}
-.timestamp{font-size:.8rem;color:#666;text-align:right;margin-top:4px}
-.chat-container{display:flex;flex-direction:column}
-textarea{resize:vertical}
+body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 40px;
+}
+.container {
+    max-width: 2000px;
+    margin: auto;
+}
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+}
+.chat-box {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.chat-item {
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 75%;
+    color: #000;
+}
+.chat-item.admin {
+    background:rgb(235, 232, 232); /* Merah muda */
+    align-self: flex-start;
+}
+.chat-item.pembeli,
+.chat-item.penjual {
+    background:rgb(230, 91, 105); /* Merah lebih tua */
+    align-self: flex-end;
+    margin-left: auto;
+}
+.sender {
+    font-weight: 600;
+}
+.timestamp {
+    font-size: .8rem;
+    color: #666;
+    text-align: right;
+    margin-top: 4px;
+}
+.chat-container {
+    display: flex;
+    flex-direction: column;
+}
+textarea {
+    resize: vertical;
+}
+.btn-success {
+    background-color: #b02a37;
+    border-color: #b02a37;
+}
+.btn-success:hover {
+    background-color: #96212d;
+    border-color: #96212d;
+}
+.btn-merah {
+    background-color: #ffffff;
+    border-color: #7b1e1e;
+    color: #7b1e1e;
+}
+.btn-merah:hover {
+    background-color: #96212d;
+    border-color: #96212d;
+}
+
 </style>
 </head>
 <body>
@@ -112,7 +169,7 @@ textarea{resize:vertical}
         <button type="submit" class="btn btn-success">Kirim Balasan</button>
     </form>
 
-    <a href="javascript:history.back()" class="btn btn-secondary">← Kembali</a>
+<a href="javascript:history.back()" class="btn btn-merah">← Kembali</a>
 </div>
 
 <script>
