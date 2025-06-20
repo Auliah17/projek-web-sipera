@@ -26,7 +26,7 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
             font-family: 'Segoe UI', sans-serif;
         }
         .navbar-sipera {
-            background-color: #43a047;
+            background-color: #7b1e1e;
         }
         .navbar-brand {
             font-weight: bold;
@@ -36,11 +36,11 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
             color: #f1f1f1;
         }
         .btn-logout {
-            background-color: #388e3c;
+            background-color: #7b1e1e;
             color: white;
         }
         .btn-logout:hover {
-            background-color: #2e7d32;
+            background-color: #7b1e1e;
         }
         .table-wrapper {
             max-width: 1100px;
@@ -48,21 +48,41 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
             background: white;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgb(250, 249, 249);
         }
         h3 {
-            color: #2e7d32;
+            color:rgb(0, 0, 0);
             margin-bottom: 30px;
             text-align: center;
         }
         .table th {
-            background-color: #c8e6c9;
+            background-color:rgb(237, 237, 237);
         }
         .icon-verifikasi {
             font-size: 18px;
         }
         .btn-verifikasi {
             padding: 4px 10px;
+        }
+        .btn-custom-back {
+            background-color: transparent;
+            color: #7b1e1e;
+            border: 2px solid #7b1e1e;
+            transition: all 0.2s ease;
+        }
+
+        .btn-custom-back:hover {
+            background-color: #7b1e1e;
+            color: white;
+        }
+
+        .btn-custom-back:active {
+            background-color: #5e1515;
+            color: white;
+        }
+        .thead-merah th {
+            background-color: #7b1e1e !important;
+            color: white !important;
         }
     </style>
 </head>
@@ -73,19 +93,22 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="#">SIPERA - Admin</a>
         <div class="ms-auto">
-            <a href="/sipera/logout.php" class="nav-link">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/sipera/logout.php" class="nav-link text-white">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
 </nav>
 
 <!-- ✅ Konten utama -->
 <div class="table-wrapper">
-    <h3><i class="bi bi-person-check-fill"></i> Verifikasi Dokumen Pengguna</h3>
+    <h3><i class="bi bi-person-check-fill"></i> Data Pengguna</h3>
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
-            <thead class="table-success text-center">
+            <thead class="thead-merah text-center">
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
@@ -93,7 +116,6 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
                     <th>Alamat</th>
                     <th>Dokumen</th>
                     <th>Status</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,17 +151,6 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
                             <span class="text-muted">-</span>
                         <?php endif; ?>
                     </td>
-
-                    <!-- Kolom Aksi: hanya untuk dokter -->
-                    <td class="text-center">
-                        <?php if ($row['role'] === 'dokter' && $row['verifikasi'] == 0): ?>
-                            <a href="verifikasi.php?verifikasi_id=<?= $row['id'] ?>" class="btn btn-sm btn-success btn-verifikasi">
-                                <i class="bi bi-check2-circle"></i> Verifikasi
-                            </a>
-                        <?php else: ?>
-                            <span class="text-muted">-</span>
-                        <?php endif; ?>
-                    </td>
                 </tr>
                 <?php endwhile; ?>
             </tbody>
@@ -147,7 +158,7 @@ $result = $conn->query("SELECT * FROM users ORDER BY nama ASC");
     </div>
 
     <div class="d-flex justify-content-start mt-3">
-        <a href="dashboard.php" class="btn btn-outline-success">
+        <a href="dashboard.php" class="btn btn-custom-back">
             ← Kembali ke Dashboard
         </a>
     </div>
