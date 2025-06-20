@@ -22,8 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $result->fetch_assoc();
 
             if (password_verify($password, $user['password'])) {
-
-                // Cek verifikasi khusus untuk dokter
+                // ❗ Cegah login jika dokter belum diverifikasi
                 if ($user['role'] === 'dokter' && $user['verifikasi'] == 0) {
                     $error = "Akun Anda belum diverifikasi oleh admin.";
                 } else {
@@ -32,12 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['nama'] = $user['nama'];
                     $_SESSION['role'] = $user['role'];
 
-                    // Tambahkan notifikasi khusus dokter yang baru diverifikasi
                     if ($user['role'] === 'dokter' && $user['verifikasi'] == 1) {
-                        $_SESSION['notifikasi_verifikasi'] = "Akun Anda telah berhasil diverifikasi oleh admin. Silakan lanjutkan.";
+                        $_SESSION['notifikasi_verifikasi'] = "Akun Anda telah berhasil diverifikasi oleh admin.";
                     }
 
-                    // Redirect sesuai role
+                    // Redirect berdasarkan role
                     switch ($user['role']) {
                         case 'admin':
                             header("Location: app/views/admin/dashboard.php");
@@ -67,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<!-- TAMPILAN HTML -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -82,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 100vh;
             font-family: 'Segoe UI', sans-serif;
         }
-
         .login-container {
             background: #fff;
             padding: 2rem 2.5rem;
@@ -91,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 100%;
             max-width: 420px;
         }
-
         .logo {
             text-align: center;
             margin-bottom: 1.5rem;
@@ -99,21 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: bold;
             color: #7b1e1e;
         }
-
-        h2 {
-            text-align: center;
-            color: #7b1e1e;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-        }
-
-        .form-control {
-            border-radius: 8px;
-        }
-
         .btn-login {
             background-color: #7b1e1e;
             border: none;
@@ -121,32 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1rem;
-            transition: 0.3s;
         }
-
         .btn-login:hover {
             background-color: #5e1616;
         }
-
         .register-link {
             text-align: center;
             margin-top: 1rem;
-            font-size: 0.95rem;
-        }
-
-        .register-link a {
-            color: #7b1e1e;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-
-        .alert-danger {
-            border-radius: 8px;
         }
     </style>
 </head>
@@ -168,11 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        <button type="submit" class="btn btn-login btn-primary">Login</button>
+        <button type="submit" class="btn btn-login">Login</button>
     </form>
 
     <div class="register-link">
-        Belum punya akun? <a href="register.php">Daftar disini</a>
+        Belum punya akun? <a href="register.php">Daftar di sini</a>
     </div>
 </div>
 </body>
