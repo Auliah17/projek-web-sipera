@@ -23,7 +23,7 @@ if (!$konsultasi) {
     exit();
 }
 
-// Jika AJAX untuk load chat
+// Load chat (AJAX)
 if (isset($_GET['load']) && $_GET['load'] == 1) {
     $stmt = $conn->prepare("SELECT * FROM chat_konsultasi WHERE id_konsultasi = ? ORDER BY waktu_kirim ASC");
     $stmt->bind_param("i", $id_konsultasi);
@@ -40,7 +40,7 @@ if (isset($_GET['load']) && $_GET['load'] == 1) {
     exit();
 }
 
-// Kirim pesan AJAX
+// Kirim pesan (AJAX)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
     $pesan = trim($_POST['pesan']);
     if (!empty($pesan)) {
@@ -57,41 +57,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pesan'])) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Detail Konsultasi</title>
+    <title>Konsultasi Penjual - SIPERA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        .chat-box {
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #fff;
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', sans-serif;
         }
-        .chat-message { margin-bottom: 12px; }
-        .chat-message.penjual { text-align: right; }
-        .chat-message.dokter { text-align: left; }
-        .bubble {
-            display: inline-block;
-            padding: 10px 15px;
-            border-radius: 10px;
-            max-width: 70%;
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+            margin-top: 30px;
+            max-width: 800px;
         }
-        .bubble.penjual { background-color: #d4edda; }
-        .bubble.dokter { background-color: #f0f0f0; }
+
+        h4 {
+            color: #800000;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+.chat-box {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+}
+.chat-message { margin-bottom: 12px; }
+.chat-message.penjual { text-align: right; }
+.chat-message.dokter { text-align: left; }
+.bubble {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+/* WARNA MARON UNTUK PENJUAL */
+.bubble.penjual {
+    background-color: #800000;
+    color: white;
+}
+
+/* WARNA ABU TERANG UNTUK DOKTER */
+.bubble.dokter {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+/* AGAR WAKTU TERLIHAT JELAS DI BUBBLE MARON */
+.bubble.penjual .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* AGAR WAKTU DOKTER MASIH BEDA DAN TERLIHAT JUGA */
+.bubble.dokter .text-muted {
+    color: #555 !important;
+}
+
+
+        textarea.form-control {
+            border-radius: 10px;
+            resize: none;
+        }
+
+        .btn-success {
+            background-color: #800000;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #a94442;
+        }
+
+        .btn-secondary {
+            background-color: #bbb;
+            border: none;
+        }
     </style>
 </head>
-<body class="p-4 bg-light">
-<div class="container bg-white p-4 rounded shadow">
+<body>
+
+<div class="container">
     <h4>Konsultasi dengan Dokter: <?= htmlspecialchars($konsultasi['nama_dokter']) ?></h4>
 
-    <div class="chat-box my-4" id="chatBox"></div>
+    <div class="chat-box mb-4" id="chatBox"></div>
 
     <form id="chatForm">
-        <textarea name="pesan" id="pesan" class="form-control mb-2" placeholder="Tulis balasan..." required></textarea>
-        <button type="submit" class="btn btn-success">Kirim</button>
-        <a href="form_konsultasi.php" class="btn btn-secondary">Kembali</a>
+        <textarea name="pesan" id="pesan" class="form-control mb-3" rows="3" placeholder="Tulis pesan..." required></textarea>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">Kirim</button>
+            <a href="form_konsultasi.php" class="btn btn-secondary">Kembali</a>
+        </div>
     </form>
 </div>
 
@@ -111,8 +174,9 @@ $('#chatForm').submit(function(e) {
     });
 });
 
-setInterval(loadChat, 2000);
+setInterval(loadChat, 2500);
 loadChat();
 </script>
+
 </body>
 </html>
