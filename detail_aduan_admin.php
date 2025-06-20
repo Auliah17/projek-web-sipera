@@ -28,7 +28,7 @@ if ($result_check->num_rows === 0) {
 $aduan = $result_check->fetch_assoc();
 
 // Kirim pesan balasan admin via AJAX
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi']) && $_POST['aksi'] === 'kirim_pesan') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['aksi'] ?? '') === 'kirim_pesan') {
     $pesan = trim($_POST['pesan'] ?? '');
     if ($pesan === '') {
         echo "EMPTY";
@@ -48,18 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi']) && $_POST['ak
     exit();
 }
 
-// Load pesan chat via AJAX (termasuk pesan awal aduan)
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'] === 'load_pesan') {
+// Load pesan chat via AJAX
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['aksi'] ?? '') === 'load_pesan') {
     ?>
-    <!-- Pesan Awal dari Penjual -->
-    <div style="background-color: #dcedc8; padding: 10px; margin-bottom: 10px; border-radius: 10px; max-width: 80%;">
+    <div class="bubble you">
         <strong><?= htmlspecialchars($aduan['nama']) ?> (Pengguna)</strong><br>
-        <?= nl2br(htmlspecialchars($aduan['pesan'])) ?><br>
+        <?= nl2br(htmlspecialchars($aduan['pesan'])) ?>
         <small><?= date('d M Y H:i', strtotime($aduan['tanggal'])) ?></small>
     </div>
     <?php
-
-    // Balasan dari admin dan penjual
     $stmt = $conn->prepare("SELECT * FROM balasan_aduan WHERE id_aduan = ? ORDER BY tanggal ASC");
     $stmt->bind_param("i", $id_aduan);
     $stmt->execute();
@@ -67,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
 
     while ($row = $result->fetch_assoc()) {
         $sender = ($row['pengirim'] === 'admin') ? 'Anda (Admin)' : 'Pengguna';
-        $bgColor = ($row['pengirim'] === 'admin') ? '#bbdefb' : '#dcedc8';
+        $class = ($row['pengirim'] === 'admin') ? 'me' : 'you';
         ?>
-        <div style="background-color: <?= $bgColor ?>; padding: 10px; margin-bottom: 10px; border-radius: 10px; max-width: 80%;">
+        <div class="bubble <?= $class ?>">
             <strong><?= $sender ?></strong><br>
-            <?= nl2br(htmlspecialchars($row['pesan'])) ?><br>
+            <?= nl2br(htmlspecialchars($row['pesan'])) ?>
             <small><?= date('d M Y H:i', strtotime($row['tanggal'])) ?></small>
         </div>
         <?php
@@ -93,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
             font-family: 'Segoe UI', sans-serif;
         }
         .navbar-sipera {
-            background-color: #43a047;
+            background-color: #7b1e1e;
         }
         .navbar-brand {
             font-weight: bold;
@@ -103,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
             color: #f1f1f1;
         }
         .chat-container {
-            max-width: 900px;
+            max-width: 1500px;
             margin: 40px auto;
             background: white;
             padding: 30px;
@@ -117,24 +114,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
             background: #e8f5e9;
             border-radius: 10px;
             margin-bottom: 15px;
-            box-shadow: inset 0 0 8px #a5d6a7;
+            box-shadow: inset 0 0 8px #7b1e1e;
         }
         textarea {
             resize: none;
         }
+        .bubble {
+            max-width: 40%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            position: relative;
+            font-size: 20px;
+            line-height: 1.5;
+            clear: both;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .bubble.me {
+            background-color:rgb(168, 47, 57); /* merah muda */
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 0;
+            font-weight: bold
+        }
+
+        .bubble.you {
+            background-color:rgb(212, 178, 178); /* merah terang */
+            margin-right: auto;
+            text-align: left;
+            border-bottom-left-radius: 0;
+            font-weight: bold
+        }
+
+        .bubble small {
+            display: block;
+            margin-top: 6px;
+            font-size: 15px;
+            color: black;
+            font-weight: bold
+        }
         .btn-kembali {
-            background: none;
-            border: 1px solid #43a047;
-            color: #2e7d32;
+            background-color: #ffffff;
+            color: #7b1e1e;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
         }
         .btn-kembali:hover {
-            background: #c8e6c9;
+            background-color: #5e1616;
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn-kirim-merah {
+            background-color: #b02a37; /* merah tua */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .btn-kirim-merah:hover {
+            background-color: #8b1e2a;
         }
     </style>
 </head>
 <body>
 
-<!-- ✅ Navbar SIPERA -->
 <nav class="navbar navbar-expand-lg navbar-sipera">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="#">SIPERA - Admin</a>
@@ -146,7 +196,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
     </div>
 </nav>
 
-<!-- ✅ Chat Aduan -->
 <div class="chat-container">
     <h4 class="mb-3"><i class="bi bi-chat-dots"></i> Chat Aduan dari: <?= htmlspecialchars($aduan['nama']) ?></h4>
     <p><strong>Subjek:</strong> <?= htmlspecialchars($aduan['subjek']) ?></p>
@@ -155,14 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
 
     <form id="chatForm" class="d-flex mt-3 gap-2">
         <textarea name="pesan" id="pesan" rows="2" class="form-control" placeholder="Tulis pesan balasan..." required></textarea>
-        <button type="submit" class="btn btn-success px-4">Kirim</button>
+        <button type="submit" class="btn-kirim-merah px-4">Kirim</button>
     </form>
     <div id="error-msg" class="text-danger mt-2"></div>
 
     <div class="mt-4">
-        <a href="daftar_aduan.php" class="btn btn-outline-success btn-kembali">
-            ← Kembali ke Daftar Aduan
-        </a>
+        <a href="daftar_aduan.php" class="btn btn-kembali">← Kembali ke Daftar Aduan</a>
     </div>
 </div>
 
