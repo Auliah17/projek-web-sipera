@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['aksi']) && $_GET['aksi'
             box-shadow: 0 0 8px #558b2faa;
         }
         button {
-            background: #689f38;
+            background: #7b1e1e1;
             color: white;
             border: none;
             padding: 10px 20px;
